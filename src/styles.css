@@ -1,0 +1,48 @@
+.App {
+    font-family: 'Fira Code';
+    text-align: center;
+  }
+  .intro{
+    color: white;
+  }
+  
+  body {
+    background-color: black;
+  }
+  
+  .all-buttons{
+margin: 1px;
+  }
+  h1 {
+    color: white;
+    margin-top: 2%;
+    font-size: 35px;
+  }
+  .bar {
+    display: inline-block;
+  }
+  
+  .bar-container {
+    margin-top: 10px;
+  }
+  
+  button {
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 30px;
+    color: black;
+    background-color: white;
+    font-family: "Fira Code";
+    cursor: pointer;
+    font-size: 15px;
+  }
+  
+  button:hover {
+    background-color: rgb(214, 213, 213);
+  }
+  
+  #gen-array{
+    background-color: green;
+    color: white;
+  }
