@@ -61,9 +61,9 @@ const bubbleSort= async ()=>{
         for(let j=0;j<arr.length-1-i;j++){
             if(arr[j]>arr[j+1]){
                 swap(arr,j,j+1);
+                setArray([...arr])
+                await sleep(speed);
             }
-            setArray([...arr])
-            await sleep(speed);
         }
     }
     document.getElementById("speed-slider").disabled = false;
@@ -93,15 +93,16 @@ let selectionArr = array.slice()
 for (let i=0;i<selectionArr.length;i++){
     let minIndex = i;
     for (let j=minIndex+1;j<selectionArr.length;j++){
+        setArray([...selectionArr]);
+        await sleep(speed);
         if (selectionArr[j] < selectionArr[minIndex]){
             minIndex = j;
         };
-        setArray([...selectionArr]);
-            await sleep(speed);
+
     }
-    swap(selectionArr,i,minIndex);
     setArray([...selectionArr]);
     await sleep(speed);
+    swap(selectionArr,i,minIndex);
 }
 
 document.getElementById("speed-slider").disabled = false;
@@ -130,6 +131,9 @@ const insertionSort = async ()=>{
     for(let i=1;i<insertionArr.length;i++){
         let j = i-1
         let store = insertionArr[i];
+        setArray([...insertionArr]);
+            await sleep(speed)
+
         while(j>=0 && store<insertionArr[j]){
             insertionArr[j+1] = insertionArr[j]
             setArray([...insertionArr]);
@@ -137,8 +141,7 @@ const insertionSort = async ()=>{
             j=j-1
         }
         insertionArr[j+1] = store;
-        setArray([...insertionArr]);
-            await sleep(speed)
+        
     }
 
     document.getElementById("speed-slider").disabled = false;
@@ -148,6 +151,67 @@ const insertionSort = async ()=>{
     document.getElementById("ss").disabled = false;
     document.getElementById("gen-array").disabled = false;
 }
+
+let mergeArr = array.slice();
+
+//Merge Sort Algorithm
+
+const mergeSort = async (mergeArr)=>{
+    //making a copy of the array
+    //base case
+    if(mergeArr.length<=1){
+        return;
+    }
+
+    //finding the middle part of the array
+    let mid = Math.floor(mergeArr.length/2);
+
+    //dividing the array into 2 parts from the middle
+    let left = mergeArr.slice(0,mid);
+    let right = mergeArr.slice(mid,mergeArr.length);
+
+    mergeSort(left);
+    mergeSort(right);
+    mergeTwo(left,right,mergeArr);
+
+    await sleep(speed);
+    setArray([...mergeArr]);
+    console.log(mergeArr);
+}
+
+const mergeTwo = async(left,right,arr)=>{
+
+    let i = 0
+    let j = 0
+    let k = 0
+
+    while(i<left.length && j<right.length){
+        if (left[i]<=right[j]){
+            arr[k] = left[i];
+            i+=1;
+        }
+        else{
+            arr[k]= right[j];
+            j+=1;
+        }
+        k+=1
+    }
+
+    while(i < left.length){
+        arr[k] = left[i];
+        i+=1;
+        k+=1;
+    }
+
+    while(j<right.length){
+        arr[k] = right[j];
+
+        j+=1;
+        k+=1;
+    }
+
+}
+
 
 
 
@@ -191,10 +255,7 @@ const genArray = (show)=>{
       <button id="bs" onClick={bubbleSort}>Bubble Sort</button>
       <button id="is" onClick={insertionSort}>Insertion Sort</button>
       <button id="ss" onClick={selectionSort} >Selection Sort</button>
-      <button id="qs" >Quick Sort</button>
-      <button id="ms" >Merge Sort</button>
-      <button id="hs" >Heap Sort</button>
-
+     
       <button onClick={()=>{
             window.location.reload();
         }} style={{marginTop:"20px", backgroundColor:"red",color:"white"}}>Stop & Refresh
