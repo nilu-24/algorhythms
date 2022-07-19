@@ -15,6 +15,28 @@ export default function Viz() {
 
   //helpful functions
 
+
+  function disableButtons(){
+    document.getElementById("speed-slider").disabled = true;
+    document.getElementById("size-slider").disabled = true;
+    document.getElementById("bs").disabled = true;
+    document.getElementById("is").disabled = true;
+    document.getElementById("ss").disabled = true;
+    document.getElementById("gen-array").disabled = true;
+    document.getElementById("qs").disabled = true;
+  }
+
+  function enableButtons(){
+    document.getElementById("speed-slider").disabled = false;
+    document.getElementById("size-slider").disabled = false;
+    document.getElementById("bs").disabled = false;
+    document.getElementById("is").disabled = false;
+    document.getElementById("ss").disabled = false;
+    document.getElementById("gen-array").disabled = false;
+    document.getElementById("qs").disabled = false;
+  }
+
+
   //swap
   function swap(array,i,j){
       let temp = array[i];
@@ -45,16 +67,10 @@ function barcodeMode(){
 
 //ALGORITHMS
 
-
-
 //bubble sort
 const bubbleSort= async ()=>{
-    document.getElementById("speed-slider").disabled = true;
-    document.getElementById("size-slider").disabled = true;
-    document.getElementById("bs").disabled = true;
-    document.getElementById("is").disabled = true;
-    document.getElementById("ss").disabled = true;
-    document.getElementById("gen-array").disabled = true;
+  disableButtons();
+
     //creating a copy of the array
     let arr = array.slice();
 
@@ -67,12 +83,7 @@ const bubbleSort= async ()=>{
             }
         }
     }
-    document.getElementById("speed-slider").disabled = false;
-    document.getElementById("size-slider").disabled = false;
-    document.getElementById("bs").disabled = false;
-    document.getElementById("is").disabled = false;
-    document.getElementById("ss").disabled = false;
-    document.getElementById("gen-array").disabled = false;
+    enableButtons();
 }
 
 
@@ -80,13 +91,7 @@ const bubbleSort= async ()=>{
 
 const selectionSort = async ()=>{
 
-    document.getElementById("speed-slider").disabled = true;
-    document.getElementById("size-slider").disabled = true;
-    document.getElementById("bs").disabled = true;
-    document.getElementById("is").disabled = true;
-    document.getElementById("ss").disabled = true;
-    document.getElementById("gen-array").disabled = true;
-
+  disableButtons();
 
     //create a copy of the array
 let selectionArr = array.slice()
@@ -106,12 +111,7 @@ for (let i=0;i<selectionArr.length;i++){
     swap(selectionArr,i,minIndex);
 }
 
-document.getElementById("speed-slider").disabled = false;
-    document.getElementById("size-slider").disabled = false;
-    document.getElementById("bs").disabled = false;
-    document.getElementById("is").disabled = false;
-    document.getElementById("ss").disabled = false;
-    document.getElementById("gen-array").disabled = false;
+enableButtons();
 }
 
 
@@ -119,13 +119,7 @@ document.getElementById("speed-slider").disabled = false;
 
 const insertionSort = async ()=>{
 
-    document.getElementById("speed-slider").disabled = true;
-    document.getElementById("size-slider").disabled = true;
-    document.getElementById("bs").disabled = true;
-    document.getElementById("is").disabled = true;
-    document.getElementById("ss").disabled = true;
-    document.getElementById("gen-array").disabled = true;
-
+   disableButtons();
     //creating a copy of the array
     let insertionArr = array.slice();
 
@@ -142,15 +136,121 @@ const insertionSort = async ()=>{
             j=j-1
         }
         insertionArr[j+1] = store;
-        
+        setArray([...insertionArr]);
+            await sleep(speed);
     }
 
-    document.getElementById("speed-slider").disabled = false;
-    document.getElementById("size-slider").disabled = false;
-    document.getElementById("bs").disabled = false;
-    document.getElementById("is").disabled = false;
-    document.getElementById("ss").disabled = false;
-    document.getElementById("gen-array").disabled = false;
+  enableButtons();
+}
+
+//merge sort
+
+const mergeArr = array.slice();
+
+const mergeSort = async(mergeArr)=>{
+
+
+  if (mergeArr.length<=1){
+    return;
+  }
+  let mid = Math.floor(mergeArr.length/2);
+
+  let left = mergeArr.slice(0,mid);
+  let right = mergeArr.slice(mid,mergeArr.length);
+
+ await mergeSort(left);
+ await mergeSort(right);
+
+ await mergeTwo(left,right,mergeArr);
+
+
+}
+
+const mergeTwo = async(a,b,mergeArr)=>{
+
+  let i =0;
+  let j = 0;
+  let k = 0;
+
+  while(i<a.length && j<b.length){
+    if(a[i]<=b[j]){
+
+      mergeArr[k] = a[i]
+      setArray([...mergeArr]);
+      await sleep(speed)
+        i++;
+    }
+    else{
+      mergeArr[k] = b[j]
+      setArray([...mergeArr]);
+      await sleep(speed)
+      j++;
+    }
+    k++;
+  }
+
+  while(i<a.length){
+    
+    mergeArr[k] = a[i]
+    setArray([...mergeArr]);
+      await sleep(speed)
+    i++;
+    k++;
+  }
+
+  while(j<b.length){
+    mergeArr[k] = b[j]
+    setArray([...mergeArr]);
+      await sleep(speed)
+    j++;
+    k++;
+  }
+}
+
+
+//quick sort
+
+const quickArr = array.slice();
+
+//lomuto partition
+
+const partition = async(quickArr, left, right)=>{
+  let i = left - 1;
+
+  for(let j = left; j <= right - 1; j++){
+      await sleep(speed)
+
+      if(quickArr[j] < quickArr[right]){
+          i++;
+          swap(quickArr,i,j);
+          setArray([...quickArr])
+         await sleep(speed);
+      }
+  }
+  i++; 
+
+  //await sleep(speed);
+
+  swap(quickArr,i,right); 
+ 
+  setArray([...quickArr])
+  
+  await sleep(speed);
+  return i;
+}
+
+const quickSort = async(quickArr, left, right)=>{
+  disableButtons();
+  if(left < right){
+      let partitionIndex = await partition(quickArr, left, right);
+
+      await quickSort(quickArr, left, partitionIndex - 1);
+      await quickSort(quickArr, partitionIndex + 1, right);
+      setArray([...quickArr]);
+  }
+
+  enableButtons();
+
 }
 
 
@@ -213,10 +313,12 @@ const barCodeMode = (show)=>{
 
   return (
     <div className="all-buttons">
-      <h1>algo.<span style={{color:"#39FF14"}}>Rhythms</span>();</h1>
-      <p className="intro">Enjoy your favourite algorithms in colorful action!</p>
-      <button onClick={()=>{setShow(false)}}> Barcode Mode</button>
-      <button onClick={()=>{setShow(true)}}>Regular Mode</button>
+      <h1>algo.<span id="rhythms">Rhythms</span>();</h1>
+
+      
+      <p className="intro">Enjoy the rhythms of your favourite algorithms in colorful action!</p>
+      <button class="menu" onClick={()=>{setShow(false)}}> Barcode Mode</button>
+      <button class = "menu" onClick={()=>{setShow(true)}}>Regular Mode</button>
       <div>
 
 
@@ -231,6 +333,14 @@ const barCodeMode = (show)=>{
       <button id="bs" onClick={bubbleSort}>Bubble Sort</button>
       <button id="is" onClick={insertionSort}>Insertion Sort</button>
       <button id="ss" onClick={selectionSort} >Selection Sort</button>
+
+  <button id="qs" onClick={()=>{
+  
+    quickSort(quickArr,0,quickArr.length-1);
+
+  }} >Quick Sort</button>
+
+
      
       <button onClick={()=>{
             window.location.reload();

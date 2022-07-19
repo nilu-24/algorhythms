@@ -46,3 +46,20 @@ margin: 1px;
     background-color: green;
     color: white;
   }
+
+  #rhythms{
+    background: -webkit-linear-gradient(rgb(120, 232, 236), rgb(94, 34, 207));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .menu{
+    background-color: navy;
+    color: white;
+    border-radius: 2px;
+  }
+
+  .menu:hover{
+    background-color: rgb(214, 213, 213);
+    color:black;
+  }
