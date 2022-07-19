@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 
-import sortSound from "./sound/sort.mp3"
-
 export default function Viz() {
   //declaring all the States
 
@@ -29,7 +27,7 @@ export default function Viz() {
 function createArray() {
     const array = [];
     for (let i = 0; i < count; i++) {
-      array.push(randomInt(5, 360));
+      array.push(randomInt(35, 360));
     }
     return array;
   }
@@ -39,7 +37,10 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-var audio = new Audio(sortSound);
+function barcodeMode(){
+  setShow(false);
+}
+
 
 
 //ALGORITHMS
@@ -152,68 +153,16 @@ const insertionSort = async ()=>{
     document.getElementById("gen-array").disabled = false;
 }
 
-let mergeArr = array.slice();
 
-//Merge Sort Algorithm
 
-const mergeSort = async (mergeArr)=>{
-    //making a copy of the array
-    //base case
-    if(mergeArr.length<=1){
-        return;
-    }
-
-    //finding the middle part of the array
-    let mid = Math.floor(mergeArr.length/2);
-
-    //dividing the array into 2 parts from the middle
-    let left = mergeArr.slice(0,mid);
-    let right = mergeArr.slice(mid,mergeArr.length);
-
-    mergeSort(left);
-    mergeSort(right);
-    mergeTwo(left,right,mergeArr);
-
-    await sleep(speed);
-    setArray([...mergeArr]);
-    console.log(mergeArr);
+function showNum(array,index){
+  if (array.length <20){
+    return array[index];
+  }
+  else{
+    return;
+  }
 }
-
-const mergeTwo = async(left,right,arr)=>{
-
-    let i = 0
-    let j = 0
-    let k = 0
-
-    while(i<left.length && j<right.length){
-        if (left[i]<=right[j]){
-            arr[k] = left[i];
-            i+=1;
-        }
-        else{
-            arr[k]= right[j];
-            j+=1;
-        }
-        k+=1
-    }
-
-    while(i < left.length){
-        arr[k] = left[i];
-        i+=1;
-        k+=1;
-    }
-
-    while(j<right.length){
-        arr[k] = right[j];
-
-        j+=1;
-        k+=1;
-    }
-
-}
-
-
-
 
 const genArray = (show)=>{
 
@@ -226,23 +175,50 @@ const genArray = (show)=>{
                           style={{
                             height: `${num}px`,
                             backgroundColor: `hsl(${num},100%,50%)`,
-                            width: `${70 / count}%`
+                            width: `${80 / count}%`,
+                            fontSize:"2vw"
                           }}
                           className="bar"
                           key={index}
-                        ></div>
+                        >{showNum(array,index)}</div>
                       );
                     })}
                   </center>);
     }
 }
 
+
+const barCodeMode = (show)=>{
+
+  if(!show){
+      return (
+          <center class="bar-container">
+                  {  array.map((num, index) => {
+                    return (
+                      <div
+                        style={{
+                          height: `${250}px`,
+                          backgroundColor: `hsl(${num},100%,50%)`,
+                          width: `${80 / count}%`,
+                          fontSize:"2vw"
+                        }}
+                        className="bar"
+                        key={index}
+                      >{showNum(array,index)}</div>
+                    );
+                  })}
+                </center>);
+  }
+}
+
   return (
     <div className="all-buttons">
       <h1>algo.<span style={{color:"#39FF14"}}>Rhythms</span>();</h1>
       <p className="intro">Enjoy your favourite algorithms in colorful action!</p>
-
+      <button onClick={()=>{setShow(false)}}> Barcode Mode</button>
+      <button onClick={()=>{setShow(true)}}>Regular Mode</button>
       <div>
+
 
       <button id="gen-array"
         onClick={() => {
@@ -273,8 +249,8 @@ const genArray = (show)=>{
         }}
 
         type="range"
-        min="15"
-        max="500"
+        min="5"
+        max="300"
       ></input>
 
 <h3 style={{ color: "white" }}>Step Delay: {speed}ms</h3>
@@ -291,7 +267,10 @@ const genArray = (show)=>{
       <div>
      
       </div>
+
+
       {genArray(show)}
+      {barCodeMode(show)}
 
     </div>
   );
