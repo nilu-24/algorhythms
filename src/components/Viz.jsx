@@ -24,6 +24,8 @@ export default function Viz() {
     document.getElementById("ss").disabled = true;
     document.getElementById("gen-array").disabled = true;
     document.getElementById("qs").disabled = true;
+    document.getElementById("hs").disabled = true;
+
   }
 
   function enableButtons(){
@@ -34,6 +36,7 @@ export default function Viz() {
     document.getElementById("ss").disabled = false;
     document.getElementById("gen-array").disabled = false;
     document.getElementById("qs").disabled = false;
+    document.getElementById("hs").disabled = false;
   }
 
 
@@ -59,11 +62,6 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function barcodeMode(){
-  setShow(false);
-}
-
-
 
 //ALGORITHMS
 
@@ -76,6 +74,8 @@ const bubbleSort= async ()=>{
 
     for(let i =0;i<arr.length-1;i++){
         for(let j=0;j<arr.length-1-i;j++){
+          setArray([...arr])
+                await sleep(speed);
             if(arr[j]>arr[j+1]){
                 swap(arr,j,j+1);
                 setArray([...arr])
@@ -254,6 +254,71 @@ const quickSort = async(quickArr, left, right)=>{
 }
 
 
+//HEAP SORT
+
+// heapsort from https://www.geeksforgeeks.org/heap-sort/
+
+//make copy of the array
+const heapArr = array.slice();
+
+const heapify = async(heapArr,n,i)=>{
+
+  //let the root node be i
+  var rootNode = i;
+
+  //finding the right and left child
+        var left = 2 * i + 1; 
+        var right = 2 * i + 2; 
+
+        await sleep(speed)
+  
+        //if the left child is larger than the root node, make root to be left
+        if (left < n && heapArr[left] > heapArr[rootNode])  {
+          rootNode = left;
+        }
+
+        //if the right child is larger than the root node, make root to be right
+        if (right < n && heapArr[right] > heapArr[rootNode]){
+          rootNode = right;
+        }
+    
+        //root node must be at i
+        if (rootNode != i) {
+            swap(heapArr,i,rootNode);
+            setArray([...heapArr]);
+
+            await sleep(speed);
+  
+          await heapify(heapArr, n, rootNode);
+        }
+}
+
+const heapSort = async(heapArr)=>{
+
+  disableButtons();
+
+  let n = heapArr.length;
+
+for (var i = Math.floor(n / 2) - 1; i >= 0; i--){
+
+ await heapify(heapArr,n,i);
+}
+ // extract element from the heap
+ for (var i = n - 1; i > 0; i--) {
+  // swap root with end
+ swap(heapArr,i,0);
+ setArray([...heapArr]);
+ await sleep(speed);
+
+ //heapify the remaining heap again
+ await heapify(heapArr, i, 0);
+}
+
+enableButtons();
+ 
+}
+
+
 
 function showNum(array,index){
   if (array.length <20){
@@ -321,7 +386,6 @@ const barCodeMode = (show)=>{
       <button class = "menu" onClick={()=>{setShow(true)}}>Regular Mode</button>
       <div>
 
-
       <button id="gen-array"
         onClick={() => {
           setArray(createArray);
@@ -340,8 +404,12 @@ const barCodeMode = (show)=>{
 
   }} >Quick Sort</button>
 
+<button id="hs" onClick={()=>{
 
-     
+  heapSort(heapArr);
+
+}}>Heap Sort</button>
+
       <button onClick={()=>{
             window.location.reload();
         }} style={{marginTop:"20px", backgroundColor:"red",color:"white"}}>Stop & Refresh
