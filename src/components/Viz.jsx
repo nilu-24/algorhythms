@@ -1,51 +1,19 @@
-import React, { Component } from "react";
+import React from "react";
+import swap from "./swap";
+import showNum from "./showNum";
+import disableButtons from "./disableButtons";
+import enableButtons from "./enableButtons";
+import randomInt from "./randomInt";
 
 export default function Viz() {
   //declaring all the States
 
   const [show,setShow] = React.useState(true);
-
-  const [speed,setSpeed] = React.useState(10);
-
+  const [speed,setSpeed] = React.useState(5);
   //count of the bars in the array
   const [count, setCount] = React.useState(100);
-
   //array state
   const [array, setArray] = React.useState(createArray);
-
-  //helpful functions
-
-
-  function disableButtons(){
-    document.getElementById("speed-slider").disabled = true;
-    document.getElementById("size-slider").disabled = true;
-    document.getElementById("bs").disabled = true;
-    document.getElementById("is").disabled = true;
-    document.getElementById("ss").disabled = true;
-    document.getElementById("gen-array").disabled = true;
-    document.getElementById("qs").disabled = true;
-    document.getElementById("hs").disabled = true;
-
-  }
-
-  function enableButtons(){
-    document.getElementById("speed-slider").disabled = false;
-    document.getElementById("size-slider").disabled = false;
-    document.getElementById("bs").disabled = false;
-    document.getElementById("is").disabled = false;
-    document.getElementById("ss").disabled = false;
-    document.getElementById("gen-array").disabled = false;
-    document.getElementById("qs").disabled = false;
-    document.getElementById("hs").disabled = false;
-  }
-
-
-  //swap
-  function swap(array,i,j){
-      let temp = array[i];
-      array[i] = array[j];
-      array[j] = temp;
-  }
 
 
 //function to generate a new array
@@ -56,7 +24,6 @@ function createArray() {
     }
     return array;
   }
-
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -85,7 +52,6 @@ const bubbleSort= async ()=>{
     }
     enableButtons();
 }
-
 
 //selection sort
 
@@ -229,8 +195,6 @@ const partition = async(quickArr, left, right)=>{
   }
   i++; 
 
-  //await sleep(speed);
-
   swap(quickArr,i,right); 
  
   setArray([...quickArr])
@@ -319,16 +283,6 @@ enableButtons();
 }
 
 
-
-function showNum(array,index){
-  if (array.length <20){
-    return array[index];
-  }
-  else{
-    return;
-  }
-}
-
 const genArray = (show)=>{
 
     if(show){
@@ -375,6 +329,11 @@ const barCodeMode = (show)=>{
                 </center>);
   }
 }
+
+
+
+//UI of the app
+//display the buttons and array bars
 
   return (
     <div className="all-buttons">
@@ -431,7 +390,7 @@ const barCodeMode = (show)=>{
         max="300"
       ></input>
 
-<h3 style={{ color: "white" }}>Step Delay: {speed}ms</h3>
+<h3 style={{ color: "white" }}>Step Delay: {speed}</h3>
       <input
         id="speed-slider"
         onChange={(e) => {
@@ -439,14 +398,13 @@ const barCodeMode = (show)=>{
         }}
         type="range"
         min="1"
-        max="500"
+        max="100"
       ></input>
 
       <div>
      
       </div>
-
-
+      
       {genArray(show)}
       {barCodeMode(show)}
 
@@ -454,7 +412,3 @@ const barCodeMode = (show)=>{
   );
 }
 
-//helper function to generate random number
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
